@@ -1,0 +1,33 @@
+version: "3"
+services:
+  sample-app:
+    container_name: vueDocker
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - "./frontend:/usr/src/app"
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    stdin_open: true
+  
+  app:
+    container_name: serverDocker
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000' 
+    links: 
+      - mongo
+
+  mongo:
+    container_name: mongoDB
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodata/db:/data/db
